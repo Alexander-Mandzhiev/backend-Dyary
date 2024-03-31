@@ -36,11 +36,11 @@ export class AuthService {
         return `Осталось подтвердить вашу эл. почту, загляните на свой почтовый ящик!`
     }
 
-    async confirm(token: string) {
+    async confirm(token: string): Promise<AuthResponse> {
         const userId = await this.verifyToken(token)
         const data = await this.userService.findOneById(userId.id)
         if (data && data.status === Status.pending) {
-            const user = await this.userService.update(data.id, { status: 'active' })
+            const { password, ...user } = await this.userService.update(data.id, { status: 'active' })
             const tokens = await this.issueToken(user.id);
             return { user, ...tokens }
         }
@@ -96,9 +96,10 @@ export class AuthService {
         const token = this.jwt.sign({ id }, { expiresIn: `1d` });
         const createRecordPendingUser = await this.prisma.pendingUser.create({ data: { token } })
         await this.mailService.sendEmail({ to: [{ name: user.email, address: user.email }], subject: `Регистрация на сайте daily-diary.ru`, text: token })
+        return token
     }
 
-    private async verifyToken(token: string): Promise<UserResponse> {
+    private async verifyToken(token: string) {
         const data = await this.jwt.verifyAsync(token)
         const tokenExist = await this.prisma.pendingUser.findFirst({ where: { token: data.token } });
         if (tokenExist) {

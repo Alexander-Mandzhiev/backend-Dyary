@@ -138,3 +138,14 @@ export class DeleteMessage {
     @ApiProperty({ description: 'Сообщение об удалении', example: "Задача удалена!" })
     message: string
 }
+
+export class PendingUser {
+    @ApiProperty({ description: 'Уникальный идентификатор раунда временного блока', example: "1" })
+    id: string
+    @ApiProperty({ description: 'Дата создания пользователя', example: '2023-06-29T11:35:09.918Z' })
+    createdAt: Date
+    @ApiProperty({ description: 'Дата обновления пользователя', example: '2023-06-29T11:35:09.918Z' })
+    updatedAt: Date
+    @ApiProperty({ description: 'Токен подтверждения пользователя', example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZs..." })
+    token: string
+}
