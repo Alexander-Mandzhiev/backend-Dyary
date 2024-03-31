@@ -7,7 +7,7 @@ import type { AuthResponse, AuthTokensResponse, User, UserResponse } from 'src/t
 import { Response } from 'express';
 import { MailerService } from 'src/mailer/mailer.service';
 import { PrismaService } from 'src/prisma.service';
-import { PendingUser, Status } from 'prisma/generated/client';
+import { Status } from 'prisma/generated/client';
 
 @Injectable()
 export class AuthService {
@@ -38,7 +38,8 @@ export class AuthService {
     }
 
     async confirm(token: string) {
-        const user = await this.verifyToken(token)
+        const userId = await this.verifyToken(token)
+        const user = await this.userService.findOneById(userId.id)
         if (user && user.status === Status.pending) {
             await this.userService.update(user.id, { status: 'active' })
             const tokens = await this.issueToken(user.id);
