@@ -113,7 +113,15 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt',
   email: 'email',
   password: 'password',
-  username: 'username'
+  username: 'username',
+  status: 'status'
+};
+
+exports.Prisma.PendingUserScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  token: 'token'
 };
 
 exports.Prisma.UserSettingScalarFieldEnum = {
@@ -186,6 +194,11 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   username: 'username'
 };
 
+exports.Prisma.PendingUserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  token: 'token'
+};
+
 exports.Prisma.UserSettingOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId'
@@ -213,6 +226,12 @@ exports.Prisma.SessionRoundOrderByRelevanceFieldEnum = {
   id: 'id',
   userSessionId: 'userSessionId'
 };
+exports.Status = exports.$Enums.Status = {
+  pending: 'pending',
+  active: 'active',
+  blocked: 'blocked'
+};
+
 exports.Priority = exports.$Enums.Priority = {
   low: 'low',
   medium: 'medium',
@@ -221,6 +240,7 @@ exports.Priority = exports.$Enums.Priority = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  PendingUser: 'PendingUser',
   UserSetting: 'UserSetting',
   Task: 'Task',
   TimeBlock: 'TimeBlock',

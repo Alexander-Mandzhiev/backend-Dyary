@@ -7,12 +7,10 @@ import { TimeBlockModule } from './time-block/time-block.module';
 import { UserSessionModule } from './user-session/user-session.module';
 import { UserSettingsModule } from './user-settings/user-settings.module';
 import { MailerModule } from './mailer/mailer.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     TaskModule,

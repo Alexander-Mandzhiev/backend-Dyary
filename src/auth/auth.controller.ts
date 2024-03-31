@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, Res, UnauthorizedException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDTO } from './dto/auth.dto';
 import { Request, Response } from 'express';
@@ -27,8 +27,16 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
   @Post('signup')
-  async signup(@Body() dto: AuthDTO, @Res({ passthrough: true }) res: Response) {
-    const { refreshToken, ...response } = await this.authService.signUp(dto);
+  async signup(@Body() dto: AuthDTO) {
+    const response = await this.authService.signUp(dto);
+    return response
+  }
+
+
+  @HttpCode(HttpStatus.OK)
+  @Get('confirm')
+  async confirm(@Query('token') token: string, @Res({ passthrough: true }) res: Response) {
+    const { refreshToken, ...response } = await this.authService.confirm(token);
     await this.authService.addRefreshTokenToResponce(res, refreshToken);
     return response
   }

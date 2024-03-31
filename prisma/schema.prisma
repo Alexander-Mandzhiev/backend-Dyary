@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "generated/client"
+  provider        = "prisma-client-js"
+  output          = "generated/client"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -16,12 +16,22 @@ model User {
   email        String        @unique
   password     String
   username     String?
+  status       Status        @default(pending)
   tasks        Task[]
   timeBlocks   TimeBlock[]
   userSessions UserSession[]
   userSettings UserSetting?
 
   @@map("user")
+}
+
+model PendingUser {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  token     String
+
+  @@map("pending_user")
 }
 
 model UserSetting {
@@ -45,7 +55,7 @@ model Task {
   priority    Priority?
   isCompleted Boolean?  @default(false) @map("is_completed")
   userId      String    @map("user_id")
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("task")
 }
@@ -59,7 +69,7 @@ model TimeBlock {
   duration  Int
   order     Int      @default(1)
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("time_block")
 }
@@ -71,7 +81,7 @@ model UserSession {
   isCompleted Boolean?       @default(false) @map("is_completed")
   userId      String         @map("user_id")
   rounds      SessionRound[]
-  user        User           @relation(fields: [userId], references: [id])
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_session")
 }
@@ -92,4 +102,10 @@ enum Priority {
   low
   medium
   high
+}
+
+enum Status {
+  pending
+  active
+  blocked
 }

@@ -4,7 +4,7 @@ import { UserDto } from './dto/user.dto';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { CurrentUser } from 'src/auth/decorators/user.decorator';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { DeleteMessage, UpdateUserResponce, UserProfileResponse } from 'src/types';
+import { DeleteMessage, UserProfileResponse, UserResponse } from 'src/types';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -19,8 +19,8 @@ export class UserController {
     return await this.userService.getProfile(id);
   }
 
-  @ApiBody({ type: UpdateUserResponce })
-  @ApiOkResponse({ type: UpdateUserResponce })
+  @ApiBody({ type: UserResponse })
+  @ApiOkResponse({ type: UserResponse })
   @UsePipes(new ValidationPipe())
   @HttpCode(HttpStatus.OK)
   @Patch('profile')

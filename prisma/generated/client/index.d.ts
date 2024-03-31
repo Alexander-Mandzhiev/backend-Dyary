@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model PendingUser
+ * 
+ */
+export type PendingUser = $Result.DefaultSelection<Prisma.$PendingUserPayload>
+/**
  * Model UserSetting
  * 
  */
@@ -48,7 +53,16 @@ export type SessionRound = $Result.DefaultSelection<Prisma.$SessionRoundPayload>
  * Enums
  */
 export namespace $Enums {
-  export const Priority: {
+  export const Status: {
+  pending: 'pending',
+  active: 'active',
+  blocked: 'blocked'
+};
+
+export type Status = (typeof Status)[keyof typeof Status]
+
+
+export const Priority: {
   low: 'low',
   medium: 'medium',
   high: 'high'
@@ -57,6 +71,10 @@ export namespace $Enums {
 export type Priority = (typeof Priority)[keyof typeof Priority]
 
 }
+
+export type Status = $Enums.Status
+
+export const Status: typeof $Enums.Status
 
 export type Priority = $Enums.Priority
 
@@ -193,6 +211,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.pendingUser`: Exposes CRUD operations for the **PendingUser** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PendingUsers
+    * const pendingUsers = await prisma.pendingUser.findMany()
+    * ```
+    */
+  get pendingUser(): Prisma.PendingUserDelegate<ExtArgs>;
 
   /**
    * `prisma.userSetting`: Exposes CRUD operations for the **UserSetting** model.
@@ -714,6 +742,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    PendingUser: 'PendingUser',
     UserSetting: 'UserSetting',
     Task: 'Task',
     TimeBlock: 'TimeBlock',
@@ -735,7 +764,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userSetting' | 'task' | 'timeBlock' | 'userSession' | 'sessionRound'
+      modelProps: 'user' | 'pendingUser' | 'userSetting' | 'task' | 'timeBlock' | 'userSession' | 'sessionRound'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -802,6 +831,72 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>,
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      PendingUser: {
+        payload: Prisma.$PendingUserPayload<ExtArgs>
+        fields: Prisma.PendingUserFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PendingUserFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PendingUserFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          findFirst: {
+            args: Prisma.PendingUserFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PendingUserFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          findMany: {
+            args: Prisma.PendingUserFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>[]
+          }
+          create: {
+            args: Prisma.PendingUserCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          createMany: {
+            args: Prisma.PendingUserCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.PendingUserDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          update: {
+            args: Prisma.PendingUserUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          deleteMany: {
+            args: Prisma.PendingUserDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PendingUserUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.PendingUserUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$PendingUserPayload>
+          }
+          aggregate: {
+            args: Prisma.PendingUserAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregatePendingUser>
+          }
+          groupBy: {
+            args: Prisma.PendingUserGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<PendingUserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PendingUserCountArgs<ExtArgs>,
+            result: $Utils.Optional<PendingUserCountAggregateOutputType> | number
           }
         }
       }
@@ -1398,6 +1493,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     username: string | null
+    status: $Enums.Status | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1407,6 +1503,7 @@ export namespace Prisma {
     email: string | null
     password: string | null
     username: string | null
+    status: $Enums.Status | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1416,6 +1513,7 @@ export namespace Prisma {
     email: number
     password: number
     username: number
+    status: number
     _all: number
   }
 
@@ -1427,6 +1525,7 @@ export namespace Prisma {
     email?: true
     password?: true
     username?: true
+    status?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1436,6 +1535,7 @@ export namespace Prisma {
     email?: true
     password?: true
     username?: true
+    status?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1445,6 +1545,7 @@ export namespace Prisma {
     email?: true
     password?: true
     username?: true
+    status?: true
     _all?: true
   }
 
@@ -1527,6 +1628,7 @@ export namespace Prisma {
     email: string
     password: string
     username: string | null
+    status: $Enums.Status
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1553,6 +1655,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     username?: boolean
+    status?: boolean
     tasks?: boolean | User$tasksArgs<ExtArgs>
     timeBlocks?: boolean | User$timeBlocksArgs<ExtArgs>
     userSessions?: boolean | User$userSessionsArgs<ExtArgs>
@@ -1567,6 +1670,7 @@ export namespace Prisma {
     email?: boolean
     password?: boolean
     username?: boolean
+    status?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1593,6 +1697,7 @@ export namespace Prisma {
       email: string
       password: string
       username: string | null
+      status: $Enums.Status
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2000,6 +2105,7 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
+    readonly status: FieldRef<"User", 'Status'>
   }
     
 
@@ -2402,6 +2508,865 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well.
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model PendingUser
+   */
+
+  export type AggregatePendingUser = {
+    _count: PendingUserCountAggregateOutputType | null
+    _min: PendingUserMinAggregateOutputType | null
+    _max: PendingUserMaxAggregateOutputType | null
+  }
+
+  export type PendingUserMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    token: string | null
+  }
+
+  export type PendingUserMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    token: string | null
+  }
+
+  export type PendingUserCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    token: number
+    _all: number
+  }
+
+
+  export type PendingUserMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    token?: true
+  }
+
+  export type PendingUserMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    token?: true
+  }
+
+  export type PendingUserCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    token?: true
+    _all?: true
+  }
+
+  export type PendingUserAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PendingUser to aggregate.
+     */
+    where?: PendingUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingUsers to fetch.
+     */
+    orderBy?: PendingUserOrderByWithRelationAndSearchRelevanceInput | PendingUserOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PendingUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PendingUsers
+    **/
+    _count?: true | PendingUserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PendingUserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PendingUserMaxAggregateInputType
+  }
+
+  export type GetPendingUserAggregateType<T extends PendingUserAggregateArgs> = {
+        [P in keyof T & keyof AggregatePendingUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePendingUser[P]>
+      : GetScalarType<T[P], AggregatePendingUser[P]>
+  }
+
+
+
+
+  export type PendingUserGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PendingUserWhereInput
+    orderBy?: PendingUserOrderByWithAggregationInput | PendingUserOrderByWithAggregationInput[]
+    by: PendingUserScalarFieldEnum[] | PendingUserScalarFieldEnum
+    having?: PendingUserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PendingUserCountAggregateInputType | true
+    _min?: PendingUserMinAggregateInputType
+    _max?: PendingUserMaxAggregateInputType
+  }
+
+  export type PendingUserGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    token: string
+    _count: PendingUserCountAggregateOutputType | null
+    _min: PendingUserMinAggregateOutputType | null
+    _max: PendingUserMaxAggregateOutputType | null
+  }
+
+  type GetPendingUserGroupByPayload<T extends PendingUserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PendingUserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PendingUserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PendingUserGroupByOutputType[P]>
+            : GetScalarType<T[P], PendingUserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PendingUserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    token?: boolean
+  }, ExtArgs["result"]["pendingUser"]>
+
+  export type PendingUserSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    token?: boolean
+  }
+
+
+  export type $PendingUserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PendingUser"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      token: string
+    }, ExtArgs["result"]["pendingUser"]>
+    composites: {}
+  }
+
+
+  type PendingUserGetPayload<S extends boolean | null | undefined | PendingUserDefaultArgs> = $Result.GetResult<Prisma.$PendingUserPayload, S>
+
+  type PendingUserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PendingUserFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PendingUserCountAggregateInputType | true
+    }
+
+  export interface PendingUserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PendingUser'], meta: { name: 'PendingUser' } }
+    /**
+     * Find zero or one PendingUser that matches the filter.
+     * @param {PendingUserFindUniqueArgs} args - Arguments to find a PendingUser
+     * @example
+     * // Get one PendingUser
+     * const pendingUser = await prisma.pendingUser.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends PendingUserFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserFindUniqueArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one PendingUser that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {PendingUserFindUniqueOrThrowArgs} args - Arguments to find a PendingUser
+     * @example
+     * // Get one PendingUser
+     * const pendingUser = await prisma.pendingUser.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PendingUserFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first PendingUser that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserFindFirstArgs} args - Arguments to find a PendingUser
+     * @example
+     * // Get one PendingUser
+     * const pendingUser = await prisma.pendingUser.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends PendingUserFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserFindFirstArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first PendingUser that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserFindFirstOrThrowArgs} args - Arguments to find a PendingUser
+     * @example
+     * // Get one PendingUser
+     * const pendingUser = await prisma.pendingUser.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PendingUserFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more PendingUsers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PendingUsers
+     * const pendingUsers = await prisma.pendingUser.findMany()
+     * 
+     * // Get first 10 PendingUsers
+     * const pendingUsers = await prisma.pendingUser.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pendingUserWithIdOnly = await prisma.pendingUser.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends PendingUserFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a PendingUser.
+     * @param {PendingUserCreateArgs} args - Arguments to create a PendingUser.
+     * @example
+     * // Create one PendingUser
+     * const PendingUser = await prisma.pendingUser.create({
+     *   data: {
+     *     // ... data to create a PendingUser
+     *   }
+     * })
+     * 
+    **/
+    create<T extends PendingUserCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserCreateArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many PendingUsers.
+     *     @param {PendingUserCreateManyArgs} args - Arguments to create many PendingUsers.
+     *     @example
+     *     // Create many PendingUsers
+     *     const pendingUser = await prisma.pendingUser.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends PendingUserCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PendingUser.
+     * @param {PendingUserDeleteArgs} args - Arguments to delete one PendingUser.
+     * @example
+     * // Delete one PendingUser
+     * const PendingUser = await prisma.pendingUser.delete({
+     *   where: {
+     *     // ... filter to delete one PendingUser
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends PendingUserDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserDeleteArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one PendingUser.
+     * @param {PendingUserUpdateArgs} args - Arguments to update one PendingUser.
+     * @example
+     * // Update one PendingUser
+     * const pendingUser = await prisma.pendingUser.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends PendingUserUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserUpdateArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more PendingUsers.
+     * @param {PendingUserDeleteManyArgs} args - Arguments to filter PendingUsers to delete.
+     * @example
+     * // Delete a few PendingUsers
+     * const { count } = await prisma.pendingUser.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends PendingUserDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, PendingUserDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PendingUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PendingUsers
+     * const pendingUser = await prisma.pendingUser.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends PendingUserUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PendingUser.
+     * @param {PendingUserUpsertArgs} args - Arguments to update or create a PendingUser.
+     * @example
+     * // Update or create a PendingUser
+     * const pendingUser = await prisma.pendingUser.upsert({
+     *   create: {
+     *     // ... data to create a PendingUser
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PendingUser we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends PendingUserUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, PendingUserUpsertArgs<ExtArgs>>
+    ): Prisma__PendingUserClient<$Result.GetResult<Prisma.$PendingUserPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of PendingUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserCountArgs} args - Arguments to filter PendingUsers to count.
+     * @example
+     * // Count the number of PendingUsers
+     * const count = await prisma.pendingUser.count({
+     *   where: {
+     *     // ... the filter for the PendingUsers we want to count
+     *   }
+     * })
+    **/
+    count<T extends PendingUserCountArgs>(
+      args?: Subset<T, PendingUserCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PendingUserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PendingUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PendingUserAggregateArgs>(args: Subset<T, PendingUserAggregateArgs>): Prisma.PrismaPromise<GetPendingUserAggregateType<T>>
+
+    /**
+     * Group by PendingUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PendingUserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PendingUserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PendingUserGroupByArgs['orderBy'] }
+        : { orderBy?: PendingUserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PendingUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPendingUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PendingUser model
+   */
+  readonly fields: PendingUserFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PendingUser.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PendingUserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the PendingUser model
+   */ 
+  interface PendingUserFieldRefs {
+    readonly id: FieldRef<"PendingUser", 'String'>
+    readonly createdAt: FieldRef<"PendingUser", 'DateTime'>
+    readonly updatedAt: FieldRef<"PendingUser", 'DateTime'>
+    readonly token: FieldRef<"PendingUser", 'String'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * PendingUser findUnique
+   */
+  export type PendingUserFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter, which PendingUser to fetch.
+     */
+    where: PendingUserWhereUniqueInput
+  }
+
+
+  /**
+   * PendingUser findUniqueOrThrow
+   */
+  export type PendingUserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter, which PendingUser to fetch.
+     */
+    where: PendingUserWhereUniqueInput
+  }
+
+
+  /**
+   * PendingUser findFirst
+   */
+  export type PendingUserFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter, which PendingUser to fetch.
+     */
+    where?: PendingUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingUsers to fetch.
+     */
+    orderBy?: PendingUserOrderByWithRelationAndSearchRelevanceInput | PendingUserOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PendingUsers.
+     */
+    cursor?: PendingUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PendingUsers.
+     */
+    distinct?: PendingUserScalarFieldEnum | PendingUserScalarFieldEnum[]
+  }
+
+
+  /**
+   * PendingUser findFirstOrThrow
+   */
+  export type PendingUserFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter, which PendingUser to fetch.
+     */
+    where?: PendingUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingUsers to fetch.
+     */
+    orderBy?: PendingUserOrderByWithRelationAndSearchRelevanceInput | PendingUserOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PendingUsers.
+     */
+    cursor?: PendingUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PendingUsers.
+     */
+    distinct?: PendingUserScalarFieldEnum | PendingUserScalarFieldEnum[]
+  }
+
+
+  /**
+   * PendingUser findMany
+   */
+  export type PendingUserFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter, which PendingUsers to fetch.
+     */
+    where?: PendingUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PendingUsers to fetch.
+     */
+    orderBy?: PendingUserOrderByWithRelationAndSearchRelevanceInput | PendingUserOrderByWithRelationAndSearchRelevanceInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PendingUsers.
+     */
+    cursor?: PendingUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PendingUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PendingUsers.
+     */
+    skip?: number
+    distinct?: PendingUserScalarFieldEnum | PendingUserScalarFieldEnum[]
+  }
+
+
+  /**
+   * PendingUser create
+   */
+  export type PendingUserCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * The data needed to create a PendingUser.
+     */
+    data: XOR<PendingUserCreateInput, PendingUserUncheckedCreateInput>
+  }
+
+
+  /**
+   * PendingUser createMany
+   */
+  export type PendingUserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PendingUsers.
+     */
+    data: PendingUserCreateManyInput | PendingUserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * PendingUser update
+   */
+  export type PendingUserUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * The data needed to update a PendingUser.
+     */
+    data: XOR<PendingUserUpdateInput, PendingUserUncheckedUpdateInput>
+    /**
+     * Choose, which PendingUser to update.
+     */
+    where: PendingUserWhereUniqueInput
+  }
+
+
+  /**
+   * PendingUser updateMany
+   */
+  export type PendingUserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PendingUsers.
+     */
+    data: XOR<PendingUserUpdateManyMutationInput, PendingUserUncheckedUpdateManyInput>
+    /**
+     * Filter which PendingUsers to update
+     */
+    where?: PendingUserWhereInput
+  }
+
+
+  /**
+   * PendingUser upsert
+   */
+  export type PendingUserUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * The filter to search for the PendingUser to update in case it exists.
+     */
+    where: PendingUserWhereUniqueInput
+    /**
+     * In case the PendingUser found by the `where` argument doesn't exist, create a new PendingUser with this data.
+     */
+    create: XOR<PendingUserCreateInput, PendingUserUncheckedCreateInput>
+    /**
+     * In case the PendingUser was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PendingUserUpdateInput, PendingUserUncheckedUpdateInput>
+  }
+
+
+  /**
+   * PendingUser delete
+   */
+  export type PendingUserDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
+    /**
+     * Filter which PendingUser to delete.
+     */
+    where: PendingUserWhereUniqueInput
+  }
+
+
+  /**
+   * PendingUser deleteMany
+   */
+  export type PendingUserDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PendingUsers to delete
+     */
+    where?: PendingUserWhereInput
+  }
+
+
+  /**
+   * PendingUser without action
+   */
+  export type PendingUserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PendingUser
+     */
+    select?: PendingUserSelect<ExtArgs> | null
   }
 
 
@@ -7246,10 +8211,21 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     email: 'email',
     password: 'password',
-    username: 'username'
+    username: 'username',
+    status: 'status'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const PendingUserScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    token: 'token'
+  };
+
+  export type PendingUserScalarFieldEnum = (typeof PendingUserScalarFieldEnum)[keyof typeof PendingUserScalarFieldEnum]
 
 
   export const UserSettingScalarFieldEnum: {
@@ -7349,6 +8325,14 @@ export namespace Prisma {
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
+  export const PendingUserOrderByRelevanceFieldEnum: {
+    id: 'id',
+    token: 'token'
+  };
+
+  export type PendingUserOrderByRelevanceFieldEnum = (typeof PendingUserOrderByRelevanceFieldEnum)[keyof typeof PendingUserOrderByRelevanceFieldEnum]
+
+
   export const UserSettingOrderByRelevanceFieldEnum: {
     id: 'id',
     userId: 'userId'
@@ -7426,6 +8410,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Status'
+   */
+  export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status'>
+    
+
+
+  /**
+   * Reference to a field of type 'Status[]'
+   */
+  export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -7487,6 +8485,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     username?: StringNullableFilter<"User"> | string | null
+    status?: EnumStatusFilter<"User"> | $Enums.Status
     tasks?: TaskListRelationFilter
     timeBlocks?: TimeBlockListRelationFilter
     userSessions?: UserSessionListRelationFilter
@@ -7500,6 +8499,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     username?: SortOrderInput | SortOrder
+    status?: SortOrder
     tasks?: TaskOrderByRelationAggregateInput
     timeBlocks?: TimeBlockOrderByRelationAggregateInput
     userSessions?: UserSessionOrderByRelationAggregateInput
@@ -7517,6 +8517,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     password?: StringFilter<"User"> | string
     username?: StringNullableFilter<"User"> | string | null
+    status?: EnumStatusFilter<"User"> | $Enums.Status
     tasks?: TaskListRelationFilter
     timeBlocks?: TimeBlockListRelationFilter
     userSessions?: UserSessionListRelationFilter
@@ -7530,6 +8531,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     username?: SortOrderInput | SortOrder
+    status?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -7545,6 +8547,55 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     username?: StringNullableWithAggregatesFilter<"User"> | string | null
+    status?: EnumStatusWithAggregatesFilter<"User"> | $Enums.Status
+  }
+
+  export type PendingUserWhereInput = {
+    AND?: PendingUserWhereInput | PendingUserWhereInput[]
+    OR?: PendingUserWhereInput[]
+    NOT?: PendingUserWhereInput | PendingUserWhereInput[]
+    id?: StringFilter<"PendingUser"> | string
+    createdAt?: DateTimeFilter<"PendingUser"> | Date | string
+    updatedAt?: DateTimeFilter<"PendingUser"> | Date | string
+    token?: StringFilter<"PendingUser"> | string
+  }
+
+  export type PendingUserOrderByWithRelationAndSearchRelevanceInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    token?: SortOrder
+    _relevance?: PendingUserOrderByRelevanceInput
+  }
+
+  export type PendingUserWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PendingUserWhereInput | PendingUserWhereInput[]
+    OR?: PendingUserWhereInput[]
+    NOT?: PendingUserWhereInput | PendingUserWhereInput[]
+    createdAt?: DateTimeFilter<"PendingUser"> | Date | string
+    updatedAt?: DateTimeFilter<"PendingUser"> | Date | string
+    token?: StringFilter<"PendingUser"> | string
+  }, "id">
+
+  export type PendingUserOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    token?: SortOrder
+    _count?: PendingUserCountOrderByAggregateInput
+    _max?: PendingUserMaxOrderByAggregateInput
+    _min?: PendingUserMinOrderByAggregateInput
+  }
+
+  export type PendingUserScalarWhereWithAggregatesInput = {
+    AND?: PendingUserScalarWhereWithAggregatesInput | PendingUserScalarWhereWithAggregatesInput[]
+    OR?: PendingUserScalarWhereWithAggregatesInput[]
+    NOT?: PendingUserScalarWhereWithAggregatesInput | PendingUserScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PendingUser"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PendingUser"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PendingUser"> | Date | string
+    token?: StringWithAggregatesFilter<"PendingUser"> | string
   }
 
   export type UserSettingWhereInput = {
@@ -7883,6 +8934,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockCreateNestedManyWithoutUserInput
     userSessions?: UserSessionCreateNestedManyWithoutUserInput
@@ -7896,6 +8948,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutUserInput
     userSessions?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -7909,6 +8962,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUpdateManyWithoutUserNestedInput
@@ -7922,6 +8976,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -7935,6 +8990,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
   }
 
   export type UserUpdateManyMutationInput = {
@@ -7944,6 +9000,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -7953,6 +9010,56 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
+  }
+
+  export type PendingUserCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    token: string
+  }
+
+  export type PendingUserUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    token: string
+  }
+
+  export type PendingUserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PendingUserUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PendingUserCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    token: string
+  }
+
+  export type PendingUserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PendingUserUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    token?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserSettingCreateInput = {
@@ -8333,6 +9440,13 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type EnumStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.Status | EnumStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStatusFilter<$PrismaModel> | $Enums.Status
+  }
+
   export type TaskListRelationFilter = {
     every?: TaskWhereInput
     some?: TaskWhereInput
@@ -8386,6 +9500,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     username?: SortOrder
+    status?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -8395,6 +9510,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     username?: SortOrder
+    status?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -8404,6 +9520,7 @@ export namespace Prisma {
     email?: SortOrder
     password?: SortOrder
     username?: SortOrder
+    status?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -8456,6 +9573,43 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type EnumStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Status | EnumStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStatusWithAggregatesFilter<$PrismaModel> | $Enums.Status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStatusFilter<$PrismaModel>
+    _max?: NestedEnumStatusFilter<$PrismaModel>
+  }
+
+  export type PendingUserOrderByRelevanceInput = {
+    fields: PendingUserOrderByRelevanceFieldEnum | PendingUserOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PendingUserCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    token?: SortOrder
+  }
+
+  export type PendingUserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    token?: SortOrder
+  }
+
+  export type PendingUserMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    token?: SortOrder
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -8832,6 +9986,10 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type EnumStatusFieldUpdateOperationsInput = {
+    set?: $Enums.Status
+  }
+
   export type TaskUpdateManyWithoutUserNestedInput = {
     create?: XOR<TaskCreateWithoutUserInput, TaskUncheckedCreateWithoutUserInput> | TaskCreateWithoutUserInput[] | TaskUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TaskCreateOrConnectWithoutUserInput | TaskCreateOrConnectWithoutUserInput[]
@@ -9113,6 +10271,13 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedEnumStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.Status | EnumStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStatusFilter<$PrismaModel> | $Enums.Status
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9183,6 +10348,16 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Status | EnumStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Status[] | ListEnumStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumStatusWithAggregatesFilter<$PrismaModel> | $Enums.Status
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStatusFilter<$PrismaModel>
+    _max?: NestedEnumStatusFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -9498,6 +10673,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockCreateNestedManyWithoutUserInput
     userSessions?: UserSessionCreateNestedManyWithoutUserInput
@@ -9510,6 +10686,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutUserInput
     userSessions?: UserSessionUncheckedCreateNestedManyWithoutUserInput
@@ -9538,6 +10715,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUpdateManyWithoutUserNestedInput
@@ -9550,6 +10728,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
@@ -9562,6 +10741,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     timeBlocks?: TimeBlockCreateNestedManyWithoutUserInput
     userSessions?: UserSessionCreateNestedManyWithoutUserInput
     userSettings?: UserSettingCreateNestedOneWithoutUserInput
@@ -9574,6 +10754,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutUserInput
     userSessions?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     userSettings?: UserSettingUncheckedCreateNestedOneWithoutUserInput
@@ -9602,6 +10783,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     timeBlocks?: TimeBlockUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUpdateOneWithoutUserNestedInput
@@ -9614,6 +10796,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUncheckedUpdateOneWithoutUserNestedInput
@@ -9626,6 +10809,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskCreateNestedManyWithoutUserInput
     userSessions?: UserSessionCreateNestedManyWithoutUserInput
     userSettings?: UserSettingCreateNestedOneWithoutUserInput
@@ -9638,6 +10822,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     userSessions?: UserSessionUncheckedCreateNestedManyWithoutUserInput
     userSettings?: UserSettingUncheckedCreateNestedOneWithoutUserInput
@@ -9666,6 +10851,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUpdateOneWithoutUserNestedInput
@@ -9678,6 +10864,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     userSessions?: UserSessionUncheckedUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUncheckedUpdateOneWithoutUserNestedInput
@@ -9716,6 +10903,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockCreateNestedManyWithoutUserInput
     userSettings?: UserSettingCreateNestedOneWithoutUserInput
@@ -9728,6 +10916,7 @@ export namespace Prisma {
     email: string
     password: string
     username?: string | null
+    status?: $Enums.Status
     tasks?: TaskUncheckedCreateNestedManyWithoutUserInput
     timeBlocks?: TimeBlockUncheckedCreateNestedManyWithoutUserInput
     userSettings?: UserSettingUncheckedCreateNestedOneWithoutUserInput
@@ -9784,6 +10973,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUpdateOneWithoutUserNestedInput
@@ -9796,6 +10986,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStatusFieldUpdateOperationsInput | $Enums.Status
     tasks?: TaskUncheckedUpdateManyWithoutUserNestedInput
     timeBlocks?: TimeBlockUncheckedUpdateManyWithoutUserNestedInput
     userSettings?: UserSettingUncheckedUpdateOneWithoutUserNestedInput
@@ -10004,6 +11195,10 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PendingUserDefaultArgs instead
+     */
+    export type PendingUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PendingUserDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserSettingDefaultArgs instead
      */

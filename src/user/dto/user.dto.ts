@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
+import { Status } from "prisma/generated/client";
 import { MESSAGES, REGEX } from "src/util";
 
 export class UserDto {
@@ -21,4 +22,9 @@ export class UserDto {
     @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
     @IsString()
     readonly password?: string;
+
+    @ApiProperty({ description: 'Статус пользователя', example: "pending, active, blocked:" })
+    @IsEnum(Status)
+    @IsOptional()
+    readonly status?: Status
 }

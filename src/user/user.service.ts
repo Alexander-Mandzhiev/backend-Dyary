@@ -44,7 +44,7 @@ export class UserService {
   async update(id: string, dto: UserDto) {
     let data = dto;
     if (dto.password) { data = { ...dto, password: await hash(dto.password) } }
-    return await this.prisma.user.update({ where: { id }, data, select: { email: true, username: true } })
+    return await this.prisma.user.update({ where: { id }, data })
   }
 
   async remove(id: string): Promise<{ message: string }> {
