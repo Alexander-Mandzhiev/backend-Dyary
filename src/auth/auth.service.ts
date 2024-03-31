@@ -31,7 +31,6 @@ export class AuthService {
             return `Осталось подтвердить вашу эл. почту, загляните на свой почтовый ящик!`
         }
         if (userVerification) throw new BadRequestException('Такой пользователь существует!');
-
         const { password, ...user } = await this.userService.create(dto);
         await this.generatePendingRecord(user)
         return `Осталось подтвердить вашу эл. почту, загляните на свой почтовый ящик!`
@@ -39,9 +38,9 @@ export class AuthService {
 
     async confirm(token: string) {
         const userId = await this.verifyToken(token)
-        const user = await this.userService.findOneById(userId.id)
-        if (user && user.status === Status.pending) {
-            await this.userService.update(user.id, { status: 'active' })
+        const data = await this.userService.findOneById(userId.id)
+        if (data && data.status === Status.pending) {
+            const user = await this.userService.update(data.id, { status: 'active' })
             const tokens = await this.issueToken(user.id);
             return { user, ...tokens }
         }
